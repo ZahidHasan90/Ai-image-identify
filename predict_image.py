@@ -8,6 +8,20 @@ import cv2
 import tkinter as tk
 from tkinter import filedialog
 from PIL import ImageTk, Image
+import pygame
+
+# Initialize pygame mixer for playing audio
+pygame.mixer.init()
+
+# Define the fixed path for audio files
+audio_dir = r'C:\project\cat\audio'  # Use raw string notation for Windows paths
+crow_sound_path = os.path.join(audio_dir, 'crow_sound.mp3')
+
+# Check if the audio file exists
+if not os.path.isfile(crow_sound_path):
+    print(f"Please ensure 'crow_sound.mp3' is present in the '{audio_dir}' directory.")
+else:
+    print(f"Audio file found at: {crow_sound_path}")
 
 # Image size for resizing
 IMG_SIZE = 64
@@ -90,7 +104,7 @@ root = tk.Tk()
 root.title("Crow, Hen, or Stork Classifier")
 root.geometry("500x500")
 
-# Function to handle the image prediction
+# Function to handle the image prediction and play sound
 def predict():
     file_path = filedialog.askopenfilename()
     if not file_path:
@@ -114,6 +128,8 @@ def predict():
         class_idx = np.argmax(prediction)
         if class_idx == 0:
             result_label.configure(text="This is a crow!")
+            pygame.mixer.music.load(crow_sound_path)
+            pygame.mixer.music.play()
         elif class_idx == 1:
             result_label.configure(text="This is a hen!")
         else:
